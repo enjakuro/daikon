@@ -22,6 +22,8 @@ def compute_lengths(sequences):
 
 
 def define_computation_graph(source_vocab_size: int, target_vocab_size: int, batch_size: int):
+    
+    #dropout 15% somewhere here
 
     tf.reset_default_graph()
 
