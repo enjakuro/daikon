@@ -24,6 +24,8 @@ def compute_lengths(sequences):
 def define_computation_graph(source_vocab_size: int, target_vocab_size: int, batch_size: int):
     
     #dropout 15% somewhere here
+    
+   
 
     tf.reset_default_graph()
 
@@ -39,9 +41,13 @@ def define_computation_graph(source_vocab_size: int, target_vocab_size: int, bat
 
         encoder_inputs_embedded = tf.nn.embedding_lookup(source_embedding, encoder_inputs)
         decoder_inputs_embedded = tf.nn.embedding_lookup(target_embedding, decoder_inputs)
-
+        
+     
+    
     with tf.variable_scope("Encoder"):
         encoder_cell = tf.contrib.rnn.LSTMCell(C.HIDDEN_SIZE)
+        #add dropout 15%
+        encoder_cell = tf.rnn.rnn_cell.DropoutWrapper(cell, output_keep_prob=0.85)
         initial_state = encoder_cell.zero_state(batch_size, tf.float32)
 
         encoder_outputs, encoder_final_state = tf.nn.dynamic_rnn(encoder_cell,
@@ -51,6 +57,8 @@ def define_computation_graph(source_vocab_size: int, target_vocab_size: int, bat
 
     with tf.variable_scope("Decoder"):
         decoder_cell = tf.contrib.rnn.LSTMCell(C.HIDDEN_SIZE)
+        #add dropout 15%
+        decoder_cell = tf.rnn.rnn_cell.DropoutWrapper(cell, output_keep_prob=0.85)
         decoder_outputs, decoder_final_state = tf.nn.dynamic_rnn(decoder_cell,
                                                                  decoder_inputs_embedded,
                                                                  initial_state=encoder_final_state,
